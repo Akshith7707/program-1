@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DevOps Lab - Student Registration</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0c0c0c;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120,119,198,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,119,198,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120,219,255,0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .form-container {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 25px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.5),
+                0 0 50px rgba(0,255,255,0.1);
+            border: 1px solid rgba(0,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(0,255,255,0.1), transparent);
+            animation: rotate 4s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f5ff, #ff00ff, #00ff88);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 30px rgba(0,255,255,0.5);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        h2 {
+            text-align: center;
+            color: #e0e0e0;
+            margin-bottom: 40px;
+            font-size: 1.4em;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="tel"], textarea, select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(0,255,255,0.3);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        input[type="text"]:focus, input[type="tel"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #00f5ff;
+            box-shadow: 0 0 25px rgba(0,245,255,0.4);
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #888;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: flex;
+            align-items: center;
+            margin: 0;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: #00f5ff;
+            filter: hue-rotate(180deg);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register {
+            background: linear-gradient(45deg, #00f5ff, #0099ff);
+            color: #000;
+            box-shadow: 0 10px 30px rgba(0,245,255,0.4);
+        }
+
+        .btn-clear {
+            background: linear-gradient(45deg, #ff0080, #ff6600);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(255,0,128,0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-content">
+            <h1>DevOps Lab</h1>
+            <h2>Student Registration Form</h2>
+            
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" name="contact" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="Male" required> Male</label>
+                        <label><input type="radio" name="gender" value="Female"> Female</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Hobbies</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="hobbies[]" value="Singing"> Singing</label>
+                        <label><input type="checkbox" name="hobbies[]" value="Travelling"> Travelling</label>
+                        <label><input type="checkbox" name="hobbies[]" value="Reading novels"> Reading novels</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Skillset</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="skills[]" value="C"> C</label>
+                        <label><input type="checkbox" name="skills[]" value="Python"> Python</label>
+                        <label><input type="checkbox" name="skills[]" value="Java"> Java</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="qualification">Highest Qualification</label>
+                    <select id="qualification" name="qualification" required>
+                        <option value="">--SELECT--</option>
+                        <option>Ph.D</option>
+                        <option>M.E/M.Tech</option>
+                        <option>B.E/B.Tech</option>
+                        <option>Diploma</option>
+                        <option>Inter</option>
+                        <option>SSC</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="district">District</label>
+                    <select id="district" name="district" required>
+                        <option value="">--SELECT--</option>
+                        <option>District 1</option>
+                        <option>District 2</option>
+                        <option>District 3</option>
+                    </select>
+                </div>
+                
+                <div class="buttons">
+                    <button type="submit" class="btn btn-register">Register</button>
+                    <button type="reset" class="btn btn-clear">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
